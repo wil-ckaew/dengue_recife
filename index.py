@@ -564,7 +564,7 @@ def graph11(month, team, toggle):
 
 
     #fig11.update_layout(main_config, height=300, template=template)
-    select = html.H1("Todos Casos Dengue confirmados") if team == 0 else html.H1(team)
+    select = html.H5("Todos Casos Dengue confirmados") if team == 0 else html.H1(team)
 
     return fig11, select
 
