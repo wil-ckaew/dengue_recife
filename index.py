@@ -426,7 +426,7 @@ def graph5(month, toggle):
     fig5 = go.Figure()
     # Grafico 5
     fig5.add_trace(go.Indicator(mode='number+delta',
-        title = {"text": f"<span>{B5_Dados['mês_notificacao'].iloc[0]} - Febre </span><br><span style='font-size:70%'>Mês ao Ano notificado - em relação a média</span><br>"},
+        title = {"text": f"<span>{B5_Dados['ds_semana_notificacao'].iloc[0]} - Dengue</span><br><span style='font-size:50%'>Casos com notificados- em relação a média</span><br>"},
         value = B5_Dados['notificacao_ano'].iloc[0],
         number = {'prefix': ""},
         delta = {'relative': True, 'valueformat': '.1%', 'reference': B5_Dados['notificacao_ano'].mean()}
@@ -438,7 +438,7 @@ def graph5(month, toggle):
     fig6 = go.Figure()
     fig6.add_trace(go.Indicator(mode='number+delta',
         # Grafico 6
-        title = {"text": f"<span>{B6_Dados['ds_semana_notificacao'].iloc[0]} - Febre </span><br><span style='font-size:70%'>Semana ao Mês - em relação a média</span><br>"},
+        title = {"text": f"<span>{B6_Dados['ds_semana_notificacao'].iloc[0]} - Febre </span><br><span style='font-size:50%'>Semana ao Mês - em relação a média</span><br>"},
         value = B6_Dados['mês_notificacao'].iloc[0],
         number = {'prefix': ""},
         delta = {'relative': True, 'valueformat': '.1%', 'reference': B6_Dados['mês_notificacao'].mean()}
@@ -446,7 +446,7 @@ def graph5(month, toggle):
 
     fig5.update_layout(main_config, height=200, template=template)
     fig6.update_layout(main_config, height=200, template=template)
-    fig5.update_layout({"margin": {"l":0, "r":0, "t":20, "b":0}})
+    fig5.update_layout({"margin": {"l":0, "r":0, "t":40, "b":0}})
     fig6.update_layout({"margin": {"l":0, "r":0, "t":20, "b":0}})
     return fig5, fig6
 
@@ -458,13 +458,13 @@ def graph5(month, toggle):
 def graph7(toggle):
     template = template_theme1 if toggle else template_theme2
 
-    B7_Dados = df.groupby('ds_semana_notificacao')['notificacao_ano'].sum()
+    B7_Dados = df.groupby('sangram')['notificacao_ano'].sum()
     #B7_Dados_group = B7_Dados.groupby('mês_notificacao')['chuva'].sum().reset_index()
     
     #fig7 = px.line(B7_Dados, y="chuva", x="mês_notificacao", color="ds_semana_notificacao")
    # fig7.add_trace(go.Scatter(y=B7_Dados_group["chuva"], x=B7_Dados_group["mês_notificacao"], mode='lines+markers', fill='tonexty', name='total casos grafico 7'))
     fig7 = go.Figure()
-    fig7.add_trace(go.Pie(labels=['dasos da semana por notificacao', 'notificacao por ano'], values=B7_Dados, hole=.6))
+    fig7.add_trace(go.Pie(labels=['Dengue por sangramento', 'através notificação ao ano'], values=B7_Dados, hole=.6))
     
 
 
@@ -548,22 +548,23 @@ def graph10(team, toggle):
 )
 def graph11(month, team, toggle):
     template = template_theme1 if toggle else template_theme2
-
-    mask = month_filter(month)
+    
+    mask = team_filter(team)
     df_11 = df.loc[mask]
 
-    mask = team_filter(team)
-    df_11 = df_11.loc[mask]
+    df11 = df_11.groupby(['mês_notificacao', 'ds_semana_notificacao'])['plaq_menor'].sum().reset_index()
+    df11_group = df.groupby('mês_notificacao')['plaq_menor'].sum().reset_index()
 
-    fig11 = go.Figure()
-    fig11.add_trace(go.Indicator(mode='number',
-        title = {"text": f"<span style='font-size:150%'>Febre Total</span><br><span style='font-size:70%'>Em Numeros</span><br>"},
-        value = df_11['febre'].sum(),
-        number = {'prefix': "Total :"}
-    ))
+    fig11 = px.line(df11, y="plaq_menor", x="mês_notificacao", color="ds_semana_notificacao")
+    fig11.add_trace(go.Scatter(y=df11_group["plaq_menor"], x=df11_group["mês_notificacao"], mode='lines+markers', fill='tonexty', fillcolor='rgba(255, 0, 0, 0.2)', name='Total de Casos por plaquetas menor'))
+    #fig11.show()
+    
+    fig11.update_layout(main_config, height=400, template=template, showlegend=False)
+    #return fig11
 
-    fig11.update_layout(main_config, height=300, template=template)
-    select = html.H1("Todos febre confirmados") if team == 0 else html.H1(team)
+
+    #fig11.update_layout(main_config, height=300, template=template)
+    select = html.H1("Todos Casos Dengue confirmados") if team == 0 else html.H1(team)
 
     return fig11, select
 
