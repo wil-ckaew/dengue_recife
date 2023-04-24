@@ -51,10 +51,6 @@ df.loc[ df['mês_notificacao'] == 'Out', 'mês_notificacao'] = 10
 df.loc[ df['mês_notificacao'] == 'Nov', 'mês_notificacao'] = 11
 df.loc[ df['mês_notificacao'] == 'Dez', 'mês_notificacao'] = 12
 
-# Algumas limpezas
-#df['Valor Pago'] = df['Valor Pago'].str.lstrip('R$ ')
-#df.loc[df['Status de Pagamento'] == 'Pago', 'Status de Pagamento'] = 1
-#df.loc[df['Status de Pagamento'] == 'Não pago', 'Status de Pagamento'] = 0
 
 # Transformando em int tudo que der
 df['ds_semana_notificacao'] = df['ds_semana_notificacao'].astype(int)
